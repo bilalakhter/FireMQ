@@ -1,16 +1,16 @@
 use std::sync::{Arc, Mutex};
 
-trait Storer {
+pub trait Storer {
     fn push(&mut self, data: Vec<u8>) -> usize;
     fn get(&self, offset: usize) -> Option<Vec<u8>>;
 }
-struct Messages {
+pub struct Messages {
     data: Vec<Vec<u8>>,
     mutex: Mutex<()>,
 }
 
 impl Messages {
-    fn new() -> Self {
+   pub fn new() -> Self {
         Messages {
             data: Vec::new(),
             mutex: Mutex::new(()),
