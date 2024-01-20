@@ -1,6 +1,5 @@
-// main.rs
 
-mod messages;  // Assuming messages.rs is in the same directory as main.rs
+mod messages; 
 
 use messages::{Messages, Storer};
 use std::sync::{Arc, Mutex};
