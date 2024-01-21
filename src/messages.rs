@@ -1,16 +1,17 @@
-use std::sync::{Arc, Mutex};
+use std::sync:: Mutex;
 
-pub trait Storer {
+pub trait MsgBox {
     fn push(&mut self, data: Vec<u8>) -> usize;
     fn get(&self, offset: usize) -> Option<Vec<u8>>;
 }
+
 pub struct Messages {
     data: Vec<Vec<u8>>,
     mutex: Mutex<()>,
 }
 
 impl Messages {
-   pub fn new() -> Self {
+    pub fn new() -> Self {
         Messages {
             data: Vec::new(),
             mutex: Mutex::new(()),
@@ -18,7 +19,7 @@ impl Messages {
     }
 }
 
-impl Storer for Messages {
+impl MsgBox for Messages {
     fn push(&mut self, data: Vec<u8>) -> usize {
         let _guard = self.mutex.lock().unwrap();
         let index = self.data.len();
@@ -36,13 +37,8 @@ impl Storer for Messages {
     }
 }
 
-fn data() {
-    let store = Arc::new(Mutex::new(Messages::new()));
-    let cloned_store = Arc::clone(&store);
-    let handle = std::thread::spawn(move || {
-        let mut store = cloned_store.lock().unwrap();
-        store.push(vec![1, 2, 3]);
-        println!("{:?}", store.get(0));
-    });
-    handle.join().unwrap();
+pub fn data(messages_instance: &mut Messages, message: Vec<u8>) {
+    let message_clone = message.clone();  
+    messages_instance.push(message);
+    println!("message is stored = {:?}", message_clone);
 }

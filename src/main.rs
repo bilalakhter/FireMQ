@@ -1,25 +1,14 @@
+mod messages;
 
-mod messages; 
-
-use messages::{Messages, Storer};
-use std::sync::{Arc, Mutex};
+use messages::{Messages, MsgBox};
+use std::thread;
+use std::time::Duration;
 
 fn main() {
-    let store = Arc::new(Mutex::new(Messages::new()));
-    let cloned_store = Arc::clone(&store);
-    let handle = std::thread::spawn(move || {
-        let mut store = cloned_store.lock().unwrap();
-        let index = store.push(vec![1, 2, 3]);
-        println!("Added data at index: {}", index);
-        let data = store.get(index - 1).unwrap_or_else(|| vec![]);
-        println!("Retrieved data: {:?}", data);
-    });
-
-    handle.join().unwrap();
-
-    let mut store = store.lock().unwrap();
-    let index = store.push(vec![4, 5, 6]);
-    println!("Added data at index: {}", index);
-    let data = store.get(index - 1).unwrap_or_else(|| vec![]);
-    println!("Retrieved data: {:?}", data);
+    let mut messages_instance = Messages::new();
+    let message_to_store = vec![4, 5, 6];
+    messages::data(&mut messages_instance, message_to_store);
+    thread::sleep(Duration::from_secs(5));
+    let retrieved_message = messages_instance.get(0).unwrap_or_else(|| vec![]);
+    println!("Recieved msg is -> {:?}", retrieved_message);
 }
