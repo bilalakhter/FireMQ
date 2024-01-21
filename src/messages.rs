@@ -38,7 +38,5 @@ impl MsgBox for Messages {
 }
 
 pub fn data(messages_instance: &mut Messages, message: Vec<u8>) {
-    let message_clone = message.clone();  
     messages_instance.push(message);
-    println!("message is stored = {:?}", message_clone);
 }
